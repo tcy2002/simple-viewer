@@ -1,0 +1,85 @@
+﻿#include "opengl_viewer.h"
+
+#include <iostream>
+#include <fstream>
+#include <thread>
+
+void output_obj_debug(const simple_viewer::Mesh& mesh, const std::string& path) {
+	std::ofstream ofs(path);
+	for (auto& vert : mesh.vertices) {
+		ofs << "v " << vert.position.x << " " << vert.position.y << " " << vert.position.z << "\n";
+	}
+	for (auto& face : mesh.faces) {
+		ofs << "f ";
+		for (auto& i : face.indices) {
+			ofs << i + 1 << " ";
+		}
+		ofs << "\n";
+	}
+	ofs.close();
+}
+
+void input_obj_debug(simple_viewer::Mesh& mesh, const std::string& path) {
+	std::ifstream ifs(path);
+	std::string type;
+	ifs >> type;
+	while (ifs.good()) {
+		if (type == "v") {
+			float x, y, z;
+			ifs >> x >> y >> z >> type;
+			mesh.vertices.push_back({ {x, y, z}, {0, 1, 0} });
+		}
+		else {
+			mesh.faces.push_back({});
+			auto& face = mesh.faces.back().indices;
+			ifs >> type;
+			while (type != "v" && type != "f" && ifs.good()) {
+				face.push_back(atoi(type.c_str()) - 1);
+				ifs >> type;
+			}
+		}
+	}
+	ifs.close();
+}
+
+int main()
+{
+	std::thread render_thread([] {
+		simple_viewer::setCamera(simple_viewer::Vector3(0, 0, 10), 0, 0);
+		simple_viewer::open("SimpleViewer", 800, 600);
+		});
+
+	simple_viewer::setTargetFrameRate(60);
+	simple_viewer::Mesh mesh;
+	input_obj_debug(mesh, DATA_DIR "terrain.obj");
+	simple_viewer::per_vertex_normal(mesh);
+	int id0 = simple_viewer::addObj({ simple_viewer::OBJ_MESH, false, mesh });
+	simple_viewer::Transform trans;
+	trans.setOrigin({-5000, -13000, -5000});
+	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id0, simple_viewer::OBJ_MESH, trans });
+	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, { 0.71, 0.90, 0.11 } });
+	int id1 = simple_viewer::addObj({ simple_viewer::OBJ_CUBE, false, 1, 1, 1 });
+	int id2 = simple_viewer::addObj({ simple_viewer::OBJ_CYLINDER, false, 0.5, 1 });
+	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 0.5, 1 });
+
+	float angle = 0;
+	clock_t tick = -1;
+	while (true) {
+		Sleep(16);
+		if (tick == -1) { tick = clock(); continue; }
+		clock_t tick_now = clock();
+		double dt = (tick_now - tick) / 1000.0;
+		tick = tick_now;
+
+		trans.setRotation({ 1, 1, 0 }, angle);
+		trans.setTranslation({ 3, 0, 0 });
+		simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id1, simple_viewer::OBJ_CUBE, trans });
+		trans.setTranslation({ -3, 0, 0 });
+		simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id2, simple_viewer::OBJ_CYLINDER, trans });
+		trans.setTranslation({ 0, 0, 0 });
+		simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id3, simple_viewer::OBJ_CONE, trans });
+
+		angle += (float)(0.2 * dt);
+		if (angle > 2 * 3.14159265359) angle = 0;
+	}
+}

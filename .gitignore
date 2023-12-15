@@ -12,3 +12,6 @@ cmake-build-*/
 *.lib
 *.so
 *.a
+
+!opengl/bin/
+!opengl/lib/

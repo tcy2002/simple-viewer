@@ -1,6 +1,6 @@
 ## SimpleViewer
 
-一个简易的三维视效工具，用于物理引擎的可视化
+一个简易的跨平台三维视效工具，用于物理引擎的可视化
 
 基于OpenGL（freeglut2.8，glew1.2），单窗口，窗口可重复开闭
 
@@ -16,7 +16,7 @@
 
 - 线程安全，可以在不同的线程中修改摄像机和模型数据，以及开闭窗口
 
-接口信息在opengl_viewer.h中，已通过vs预编译生成动态库（msvc）
+接口信息在opengl_viewer.h中
 
 ![objs.png](screenshots/objs.png)
 

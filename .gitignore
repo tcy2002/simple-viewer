@@ -3,8 +3,6 @@
 .idea/
 
 build/
-bin/
-lib/
 cmake-build-*/
 
 *.exe
@@ -12,6 +10,7 @@ cmake-build-*/
 *.lib
 *.so
 *.a
+*.pdb
 
 !opengl/bin/freeglut.dll
 !opengl/bin/glew32.dll

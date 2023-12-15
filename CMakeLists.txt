@@ -19,7 +19,7 @@ target_link_libraries(SimpleViewer
         ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib
         opengl32.lib)
 
-add_executable(SimpleViewerTest main.cpp)
+add_executable(SimpleViewerTest example.cpp)
 
 target_link_libraries(SimpleViewerTest SimpleViewer
         ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib

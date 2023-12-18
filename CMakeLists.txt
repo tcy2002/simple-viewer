@@ -3,7 +3,7 @@ project(SimpleViewer)
 
 set(CMAKE_CXX_STANDARD 14)
 
-if (MSVC)
+if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /EHsc /MP /bigobj")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi /Od")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /Ob2 /Oi /Ot /GL")
@@ -26,9 +26,9 @@ file(GLOB_RECURSE VIEWER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_library(SimpleViewer SHARED ${VIEWER_SOURCES})
 
 target_link_libraries(SimpleViewer PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib
-        ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib
-        opengl32)
+    ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib
+    opengl32)
 
 add_executable(SimpleViewerTest example.cpp)
 

@@ -25,14 +25,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/opengl/include)
 file(GLOB_RECURSE VIEWER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_library(SimpleViewer SHARED ${VIEWER_SOURCES})
 
-target_link_libraries(SimpleViewer
+target_link_libraries(SimpleViewer PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib
         ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib
-        opengl32.lib)
+        opengl32)
 
 add_executable(SimpleViewerTest example.cpp)
 
-target_link_libraries(SimpleViewerTest SimpleViewer
-        ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib
-        ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib
-        opengl32.lib)
+target_link_libraries(SimpleViewerTest SimpleViewer)

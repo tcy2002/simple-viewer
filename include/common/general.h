@@ -90,14 +90,14 @@ private:
 protected: \
 std::atomic<bool> _##name; \
 public: \
-void set##Name(bool t){ _##name = t; } \
-bool is##Name() const { return _##name; } \
+void set##Name(bool t){ _##name.store(t); } \
+bool is##Name() const { return _##name.load(); } \
 private:
 #define COMMON_BOOL_GET_ATOMIC(name, Name) \
 protected: \
 std::atomic<bool> _##name; \
 public: \
-bool is##Name() const { return _##name; } \
+bool is##Name() const { return _##name.load(); } \
 private:
 #define COMMON_MEMBER_SET_GET_ATOMIC(T, name, Name) \
 protected: \

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <mutex>
-#include "public_include.h"
+#include "common/vector3.h"
+#include "common/transform.h"
 
 namespace simple_viewer {
 
@@ -17,12 +18,12 @@ namespace simple_viewer {
         void keyboard(unsigned char key, int state);
         void reshape(int width, int height);
 
-        void setPosition(const Vector3& position);
+        void setPosition(const common::Vector3<float>& position);
         void setYaw(float yaw);
         void setPitch(float pitch);
         void setProj(float fov_degree, float aspect, float near_, float far_);
 
-        const Transform& getTransform(long long time);
+        const common::Transform<float>& getTransform(long long time);
         float getProj(int i) const;
 
         void reset();
@@ -30,9 +31,9 @@ namespace simple_viewer {
     private:
         std::mutex _mutex_trans, _mutex_proj;
         float _yaw, _pitch;
-        Vector3 _position;
+        common::Vector3<float> _position;
         float _fov, _aspect, _near, _far;
-        Transform _transform;
+        common::Transform<float> _transform;
         float _proj[4];
 
         const float MoveSpeedMin = 0.05, MoveSpeedMax = 10., MoveSpeedStep = 1.5;

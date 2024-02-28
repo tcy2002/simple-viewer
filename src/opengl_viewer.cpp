@@ -10,6 +10,9 @@
 #include "shader_program.h"
 #include "shader_vert.h"
 #include "shader_frag.h"
+#include "common/vector3.h"
+#include "common/matrix3x3.h"
+#include "common/transform.h"
 
 namespace simple_viewer {
 
@@ -33,7 +36,7 @@ namespace simple_viewer {
     //// axis
     static LineRenderer* axis_line = nullptr;
     static ConeRenderer* axis_arrow = nullptr;
-    static Vector3 axis_color[3] = { {0.93, 0.11, 0.14}, {0.13, 0.69, 0.3}, {0, 0.64, 0.91} }; // NOLINT
+    static common::Vector3<float> axis_color[3] = { {0.93, 0.11, 0.14}, {0.13, 0.69, 0.3}, {0, 0.64, 0.91} }; // NOLINT
     static std::atomic<bool> show_axis(true);
 
     //// state
@@ -44,23 +47,23 @@ namespace simple_viewer {
     do { if (!(obj)->isInited()) (obj)->init(1, 2); \
     (obj)->render(); } while (0)
 
-    static void drawAxis(int axis, const Matrix3& basis) {
+    static void drawAxis(int axis, const common::Matrix3x3<float>& basis) {
         if (!axis_line) return;
         shader->setVec3("gColor", axis_color[axis]);
 
         // show the axis strip
         axis_line->setWidth(2);
-        Matrix3 rot(axis != 0, axis == 0, 0, -(float)(axis == 0),
+        common::Matrix3x3<float> rot(axis != 0, axis == 0, 0, -(float)(axis == 0),
             axis == 1, -(float)(axis == 2), 0, axis == 2, axis != 2);
         shader->setMat3("gWorldBasis", basis * rot);
-        shader->setVec3("gWorldOrigin", Vector3(0, 0, -8));
+        shader->setVec3("gWorldOrigin", common::Vector3<float>(0, 0, -8));
         shader->setFloat("gAmbientIntensity", 1.0f);
         shader->setFloat("gDiffuseIntensity", 0);
         SV_RENDER_OBJ(axis_line);
 
         // show the top arrow
-        Vector3 offset(axis == 0, axis == 1, axis == 2);
-        shader->setVec3("gWorldOrigin", Vector3(0, 0, -8) + basis * offset * 0.5);
+        common::Vector3<float> offset(axis == 0, axis == 1, axis == 2);
+        shader->setVec3("gWorldOrigin", common::Vector3<float>(0, 0, -8) + basis * offset * 0.5);
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity", 0.8f);
         SV_RENDER_OBJ(axis_arrow);
@@ -138,17 +141,17 @@ namespace simple_viewer {
         shader->setFloat("gProj[1]", (float)camera.load()->getProj(1));
         shader->setFloat("gProj[2]", (float)camera.load()->getProj(2));
         shader->setFloat("gProj[3]", (float)camera.load()->getProj(3));
-        shader->setVec3("gScreenOffset", Vector3::zeros());
+        shader->setVec3("gScreenOffset", common::Vector3<float>::zeros());
         drawObjects();
 
         // render axes
         if (show_axis.load()) {
-            shader->setMat3("gCameraBasis", Matrix3::identity());
-            shader->setVec3("gCameraOrigin", Vector3::zeros());
+            shader->setMat3("gCameraBasis", common::Matrix3x3<float>::identity());
+            shader->setVec3("gCameraOrigin", common::Vector3<float>::zeros());
             auto width = glutGet(GLUT_WINDOW_WIDTH);
             auto height = glutGet(GLUT_WINDOW_HEIGHT);
             float aspect = (float)width / (float)height;
-            shader->setVec3("gScreenOffset", Vector3(-1.0f + 0.2f / aspect, -0.8, 0));
+            shader->setVec3("gScreenOffset", common::Vector3<float>(-1.0f + 0.2f / aspect, -0.8, 0));
             auto cam_inv_basis = camera_transform.getBasis().transposed();
             glClear(GL_DEPTH_BUFFER_BIT);
             drawAxis(0, cam_inv_basis);
@@ -239,10 +242,10 @@ namespace simple_viewer {
         // init a globally used shader
         shader = new ShaderProgram(shader_vert, shader_frag);
         shader->use();
-        shader->setVec3("gLightDirection", Vector3(1, -2, -3).normalized());
+        shader->setVec3("gLightDirection", common::Vector3<float>(1, -2, -3).normalized());
 
         // init axes
-        if (!axis_line) axis_line = new LineRenderer({ {0, 0, 0}, {0, 0.5, 0} });
+        if (!axis_line) axis_line = new LineRenderer({ 0, 0, 0, 0, 0.5, 0 });
         if (!axis_arrow) axis_arrow = new ConeRenderer(0.06, 0.15);
 
         glEnable(GL_DEPTH_TEST);
@@ -264,7 +267,7 @@ namespace simple_viewer {
         frame_dt.store(dt);
     }
 
-    void setCamera(const Vector3& position, float yaw, float pitch) {
+    void setCamera(const common::Vector3<float>& position, float yaw, float pitch) {
         if (camera.load() == nullptr) {
             camera.store((new Camera));
             // initialize projection of the camera

@@ -69,11 +69,11 @@ namespace simple_viewer {
         glUniform1f(glGetUniformLocation(_program_id, name), value);
     }
 
-    void ShaderProgram::setVec3(const char* name, const Vector3& value) const {
+    void ShaderProgram::setVec3(const char* name, const common::Vector3<float>& value) const {
         glUniform3f(glGetUniformLocation(_program_id, name), (float)value.x, (float)value.y, (float)value.z);
     }
 
-    void ShaderProgram::setMat3(const char* name, const Matrix3& value) const {
+    void ShaderProgram::setMat3(const char* name, const common::Matrix3x3<float>& value) const {
         static float buf[9];
         buf[0] = (float)value[0][0]; buf[1] = (float)value[1][0]; buf[2] = (float)value[2][0];
         buf[3] = (float)value[0][1]; buf[4] = (float)value[1][1]; buf[5] = (float)value[2][1];

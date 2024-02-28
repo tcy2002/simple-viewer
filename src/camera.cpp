@@ -6,9 +6,9 @@ namespace simple_viewer {
 
     Camera::Camera(): // NOLINT
             _yaw(0.), _pitch(0.),
-            _position(Vector3::zeros()),
+            _position(common::Vector3<float>::zeros()),
             _fov(SV_PI / 2.),
-            _transform(Transform::identity()),
+            _transform(common::Transform<float>::identity()),
             _proj{1., 1., -1.0002, -0.20002} {}
 
     void Camera::mouse(int button, int state, int, int) {
@@ -49,13 +49,13 @@ namespace simple_viewer {
             _yaw -= dx * _rotate_speed;
             if (_yaw > SV_PI) _yaw -= 2 * SV_PI;
             else if (_yaw < -SV_PI) _yaw += 2 * SV_PI;
-            Vector3 front(std::sin(_yaw), 0., std::cos(_yaw));
+            common::Vector3<float> front(std::sin(_yaw), 0., std::cos(_yaw));
             _position += front * (dy * _move_speed);
         } else if ((_state_left == 1 && _state_middle == 0) || (_state_left == 0 && _state_right == 0)) {
             auto right_yaw = (float)(_yaw + SV_PI / 2);
-            Vector3 right(std::sin(right_yaw), 0., std::cos(right_yaw));
+            common::Vector3<float> right(std::sin(right_yaw), 0., std::cos(right_yaw));
             _position += right * (dx * _move_speed);
-            _position -= Vector3::up() * (dy * _move_speed);
+            _position -= common::Vector3<float>::up() * (dy * _move_speed);
         } else if (_state_left == 1 && _state_middle == 1 && _state_right == 0) {
             _yaw -= dx * _rotate_speed;
             if (_yaw > SV_PI) _yaw -= 2 * SV_PI;
@@ -85,7 +85,7 @@ namespace simple_viewer {
         _proj[0] = _proj[1] / _aspect;
     }
 
-    void Camera::setPosition(const Vector3& position) {
+    void Camera::setPosition(const common::Vector3<float>& position) {
         std::unique_lock<std::mutex> lock(_mutex_trans);
         _position = position;
     }
@@ -114,7 +114,7 @@ namespace simple_viewer {
         _proj[3] = -2.0f * _far * _near / (_far - _near);
     }
 
-    const Transform& Camera::getTransform(int64_t time) {
+    const common::Transform<float>& Camera::getTransform(int64_t time) {
         std::unique_lock<std::mutex> lock(_mutex_trans);
         if (_state_left == 0 || _state_right == 0 || _state_middle == 0) {
             float dt = _last_time != -1 ? (float)(time - _last_time) / 1000 : 0;
@@ -129,7 +129,7 @@ namespace simple_viewer {
             _last_time = -1;
         }
 
-        _transform.setEulerRotation(-_pitch, _yaw, 0., Transform::RotType::S_ZXY);
+        _transform.setEulerRotation(-_pitch, _yaw, 0., common::Transform<float>::RotType::S_ZXY);
         _transform.setTranslation(_position);
         return _transform;
     }

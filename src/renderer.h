@@ -1,6 +1,9 @@
 #pragma once
 
-#include "public_include.h"
+#include "common/general.h"
+#include "common/vector3.h"
+#include "common/mesh.h"
+#include "common/transform.h"
 
 namespace simple_viewer {
 
@@ -29,8 +32,8 @@ namespace simple_viewer {
 
         COMMON_BOOL_GET(inited, Inited)
         COMMON_BOOL_GET(dynamic, Dynamic)
-        COMMON_MEMBER_SET_GET(Transform, transform, Transform)
-        COMMON_MEMBER_SET_GET(Vector3, color, Color)
+        COMMON_MEMBER_SET_GET(common::Transform<float>, transform, Transform)
+        COMMON_MEMBER_SET_GET(common::Vector3<float>, color, Color)
 
     public:
         Renderer();
@@ -48,15 +51,15 @@ namespace simple_viewer {
      */
     class MeshRenderer : public Renderer {
     protected:
-        void loadMesh(const Mesh& mesh);
+        void loadMesh(const common::Mesh<float>& mesh);
 
     public:
-        explicit MeshRenderer(const Mesh& mesh, bool dynamic = false);
+        explicit MeshRenderer(const common::Mesh<float>& mesh, bool dynamic = false);
 
         int type() const override { return RenderType::R_MESH; }
         void render() override;
 
-        bool updateMesh(const Mesh& mesh);
+        bool updateMesh(const common::Mesh<float>& mesh);
     };
 
     /**
@@ -64,15 +67,15 @@ namespace simple_viewer {
      */
     class CubeRenderer : public Renderer {
     protected:
-        void loadCube(const Vector3& size);
+        void loadCube(const common::Vector3<float>& size);
 
     public:
-        explicit CubeRenderer(const Vector3& size, bool dynamic = false);
+        explicit CubeRenderer(const common::Vector3<float>& size, bool dynamic = false);
 
         int type() const override { return RenderType::R_CUBE; }
         void render() override;
 
-        bool updateCube(const Vector3& size);
+        bool updateCube(const common::Vector3<float>& size);
     };
 
     class CylinderRenderer : public Renderer {
@@ -113,21 +116,21 @@ namespace simple_viewer {
     protected:
         COMMON_MEMBER_SET_GET(float, width, Width)
 
-        void loadLine(const std::vector<Vector3>& points);
+        void loadLine(const std::vector<float>& points);
 
     public:
-        explicit LineRenderer(const std::vector<Vector3>& points, bool dynamic = false);
+        explicit LineRenderer(const std::vector<float>& points, bool dynamic = false);
 
         int type() const override { return RenderType::R_LINE; }
         void render() override;
 
-        bool updateLine(const std::vector<Vector3>& points);
+        bool updateLine(const std::vector<float>& points);
     };
 
     // TODO
     class CharRenderer : public Renderer {
     protected:
-        static std::vector<std::vector<Mesh>> _char_vertices;
+        static std::vector<std::vector<common::Mesh<float>>> _char_vertices;
     };
 
 } // namespace simple_viewer

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "public_include.h"
+#include "common/mesh.h"
 
 namespace simple_viewer {
     
-    const Mesh _cube_mesh = { //NOLINT
+    const common::Mesh<float> _cube_mesh = { //NOLINT
         {
             {{-0.5, 0.5, -0.5}, {0, 1, 0}},
             {{-0.5, 0.5, 0.5}, {0, 1,  0}},
@@ -41,7 +41,7 @@ namespace simple_viewer {
         }
     };
 
-    const Mesh _cylinder_mesh = { //NOLINT
+    const common::Mesh<float> _cylinder_mesh = { //NOLINT
         {
             {{0.5, 0.5, 0}, {0, 1, 0}},
             {{0.475528, 0.5, -0.154508}, {0, 1, 0}},
@@ -170,7 +170,7 @@ namespace simple_viewer {
         },
     };
 
-    const Mesh _cone_mesh = { // NOLINT
+    const common::Mesh<float> _cone_mesh = { // NOLINT
         {
             {{0.5, -0.5, 0}, {0, -1, 0}},
             {{0.475528, -0.5, -0.154508}, {0, -1, 0}},

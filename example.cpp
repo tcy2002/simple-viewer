@@ -4,7 +4,7 @@
 #include <fstream>
 #include <thread>
 
-void output_obj_debug(const simple_viewer::Mesh& mesh, const std::string& path) {
+void output_obj_debug(const common::Mesh<float>& mesh, const std::string& path) {
 	std::ofstream ofs(path);
 	for (auto& vert : mesh.vertices) {
 		ofs << "v " << vert.position.x << " " << vert.position.y << " " << vert.position.z << "\n";
@@ -19,7 +19,7 @@ void output_obj_debug(const simple_viewer::Mesh& mesh, const std::string& path) 
 	ofs.close();
 }
 
-void input_obj_debug(simple_viewer::Mesh& mesh, const std::string& path) {
+void input_obj_debug(common::Mesh<float>& mesh, const std::string& path) {
 	std::ifstream ifs(path);
 	std::string type;
 	ifs >> type;
@@ -45,19 +45,19 @@ void input_obj_debug(simple_viewer::Mesh& mesh, const std::string& path) {
 int main()
 {
 	std::thread render_thread([] {
-		simple_viewer::setCamera(simple_viewer::Vector3(0, 0, 10), 0, 0);
+		simple_viewer::setCamera(common::Vector3<float>(0, 0, 10), 0, 0);
 		simple_viewer::open("SimpleViewer", 800, 600);
 		});
 
 	simple_viewer::setTargetFrameRate(60);
-	simple_viewer::Mesh mesh;
+	common::Mesh<float> mesh;
 	input_obj_debug(mesh, DATA_DIR "terrain.obj");
-	simple_viewer::per_vertex_normal(mesh);
+	common::Mesh<float>::perVertexNormal(mesh);
 	int id0 = simple_viewer::addObj({ simple_viewer::OBJ_MESH, false, mesh });
-	simple_viewer::Transform trans;
+	common::Transform<float> trans;
 	trans.setOrigin({-5000, -13000, -5000});
 	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id0, simple_viewer::OBJ_MESH, trans });
-	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, { 0.71, 0.90, 0.11 } });
+	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, common::Vector3<float>{ 0.71, 0.90, 0.11 } });
 	int id1 = simple_viewer::addObj({ simple_viewer::OBJ_CUBE, false, 1, 1, 1 });
 	int id2 = simple_viewer::addObj({ simple_viewer::OBJ_CYLINDER, false, 0.5, 1 });
 	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 0.5, 1 });

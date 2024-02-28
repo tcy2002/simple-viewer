@@ -10,7 +10,7 @@ namespace simple_viewer {
             _vertex_count(0), _vertices(nullptr),
             _triangle_count(0), _indices(nullptr),
             _inited(false), _dynamic(false),
-            _transform(Transform::identity()),
+            _transform(common::Transform<float>::identity()),
             _color({1, 1, 1}) {}
 
     Renderer::~Renderer() {
@@ -49,11 +49,11 @@ namespace simple_viewer {
         _inited = false;
     }
 
-    void MeshRenderer::loadMesh(const Mesh& mesh) {
+    void MeshRenderer::loadMesh(const common::Mesh<float>& mesh) {
         // load vertex data
         _vertex_count = mesh.vertices.size();
         _vertices = new float[_vertex_count * 6];
-        unsigned long long i = 0;
+        int i = 0;
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = mesh.vertices[j].position;
             auto& n = mesh.vertices[j].normal;
@@ -82,7 +82,7 @@ namespace simple_viewer {
         }
     }
 
-    MeshRenderer::MeshRenderer(const Mesh& mesh, bool dynamic):
+    MeshRenderer::MeshRenderer(const common::Mesh<float>& mesh, bool dynamic):
         Renderer() {
         loadMesh(mesh);
         _dynamic = dynamic;
@@ -97,18 +97,18 @@ namespace simple_viewer {
         glBindVertexArray(0);
     }
 
-    bool MeshRenderer::updateMesh(const Mesh& mesh) {
+    bool MeshRenderer::updateMesh(const common::Mesh<float>& mesh) {
         if (!_dynamic) return false;
         loadMesh(mesh);
         _inited = false;
         return true;
     }
 
-    void CubeRenderer::loadCube(const Vector3 &size) {
+    void CubeRenderer::loadCube(const common::Vector3<float> &size) {
         // load vertex data
         _vertex_count = _cube_mesh.vertices.size();
         _vertices = new float[_vertex_count * 6];
-        unsigned long long i = 0;
+        int i = 0;
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cube_mesh.vertices[j].position;
             auto& n = _cube_mesh.vertices[j].normal;
@@ -137,7 +137,7 @@ namespace simple_viewer {
         }
     }
 
-    CubeRenderer::CubeRenderer(const Vector3 &size, bool dynamic) {
+    CubeRenderer::CubeRenderer(const common::Vector3<float> &size, bool dynamic) {
         loadCube(size);
         _dynamic = dynamic;
         _color = {0.3, 0.25, 0.8};
@@ -151,7 +151,7 @@ namespace simple_viewer {
         glBindVertexArray(0);
     }
 
-    bool CubeRenderer::updateCube(const Vector3 &size) {
+    bool CubeRenderer::updateCube(const common::Vector3<float> &size) {
         if (!_dynamic) return false;
         loadCube(size);
         _inited = false;
@@ -163,7 +163,7 @@ namespace simple_viewer {
         radius *= 2;
         _vertex_count = _cylinder_mesh.vertices.size();
         _vertices = new float[_vertex_count * 6];
-        unsigned long long i = 0;
+        int i = 0;
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cylinder_mesh.vertices[j].position;
             auto& n = _cylinder_mesh.vertices[j].normal;
@@ -218,7 +218,7 @@ namespace simple_viewer {
         radius *= 2;
         _vertex_count = _cone_mesh.vertices.size();
         _vertices = new float[_vertex_count * 6];
-        unsigned long long i = 0;
+        int i = 0;
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cone_mesh.vertices[j].position;
             auto& n = _cone_mesh.vertices[j].normal;
@@ -269,30 +269,31 @@ namespace simple_viewer {
         return true;
     }
 
-    void LineRenderer::loadLine(const std::vector<Vector3>& points) {
-        _vertex_count = (points.size() - 1) * 2;
+    void LineRenderer::loadLine(const std::vector<float>& points) {
+        _vertex_count = (points.size() - 3) * 2 / 3;
         _vertices = new float[_vertex_count * 6]{};
-        unsigned long long i = 0;
-        _vertices[i++] = (float)points.front().x;
-        _vertices[i++] = (float)points.front().y;
-        _vertices[i++] = (float)points.front().z;
-        i += 3;
-        for (auto p = points.begin() + 1; p != --points.end(); p++) {
-            _vertices[i++] = (float)p->x;
-            _vertices[i++] = (float)p->y;
-            _vertices[i++] = (float)p->z;
+        int i = 6;
+        _vertices[0] = points[0];
+        _vertices[1] = points[1];
+        _vertices[2] = points[2];
+        for (int k = 3; k < (int)points.size() - 3; k += 3) {
+            float x = points[k], y = points[k + 1], z = points[k + 2];
+            _vertices[i++] = x;
+            _vertices[i++] = y;
+            _vertices[i++] = z;
             i += 3;
-            _vertices[i++] = (float)p->x;
-            _vertices[i++] = (float)p->y;
-            _vertices[i++] = (float)p->z;
+            _vertices[i++] = x;
+            _vertices[i++] = y;
+            _vertices[i++] = z;
             i += 3;
         }
-        _vertices[i++] = (float)points.back().x;
-        _vertices[i++] = (float)points.back().y;
-        _vertices[i] = (float)points.back().z;
+        int j = (int)points.size() - 3;
+        _vertices[i++] = points[j];
+        _vertices[i++] = points[j + 1];
+        _vertices[i] = points[j + 2];
     }
 
-    LineRenderer::LineRenderer(const std::vector<Vector3>& points, bool dynamic):
+    LineRenderer::LineRenderer(const std::vector<float>& points, bool dynamic):
             Renderer(), _width(1) {
         loadLine(points);
         _dynamic = dynamic;
@@ -307,7 +308,7 @@ namespace simple_viewer {
         glBindVertexArray(0);
     }
 
-    bool LineRenderer::updateLine(const std::vector<Vector3>& points) {
+    bool LineRenderer::updateLine(const std::vector<float>& points) {
         if (!_dynamic) return false;
         loadLine(points);
         _inited = false;

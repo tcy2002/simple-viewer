@@ -54,17 +54,23 @@ int main()
 	input_obj_debug(mesh, DATA_DIR "terrain.obj");
 	common::Mesh<float>::perVertexNormal(mesh);
 	int id0 = simple_viewer::addObj({ simple_viewer::OBJ_MESH, false, mesh });
+    simple_viewer::addObj({simple_viewer::OBJ_LINE, false,
+                           {0.0, 1.0, 0.0, 1.0, 2.0, 0.0, 0.0, 3.0, 0.0, -1.0, 2.0, 0.0, 0.0, 1.0, 0.0}});
 	common::Transform<float> trans;
 	trans.setOrigin({-5000, -13000, -5000});
 	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id0, simple_viewer::OBJ_MESH, trans });
 	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, common::Vector3<float>{ 0.71, 0.90, 0.11 } });
 	int id1 = simple_viewer::addObj({ simple_viewer::OBJ_CUBE, false, 1, 1, 1 });
 	int id2 = simple_viewer::addObj({ simple_viewer::OBJ_CYLINDER, false, 0.5, 1 });
-	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 0.5, 1 });
+	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 1, 1 });
+    int id4 = simple_viewer::addObj({simple_viewer::OBJ_SPHERE, false, 0.5});
+    simple_viewer::updateObj({simple_viewer::OBJ_UPDATE_TRANSFORM, id4, simple_viewer::OBJ_SPHERE,
+                              common::Transform<float>(common::Matrix3x3<float>::identity(),
+                                                       common::Vector3<float>(0, -2, 0))});
 
 	float angle = 0;
 	clock_t tick = -1;
-	while (true) {
+	while (simple_viewer::getKeyState('q') != 0) {
 		Sleep(16);
 		if (tick == -1) { tick = clock(); continue; }
 		clock_t tick_now = clock();
@@ -82,4 +88,7 @@ int main()
 		angle += (float)(0.2 * dt);
 		if (angle > 2 * 3.14159265359) angle = 0;
 	}
+
+    simple_viewer::close();
+    render_thread.join();
 }

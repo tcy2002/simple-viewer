@@ -16,7 +16,8 @@ namespace simple_viewer {
         R_CUBE = 2,
         R_CYLINDER = 3,
         R_CONE = 4,
-        R_LINE = 5
+        R_LINE = 5,
+        R_SPHERE = 6
     };
 
     /**
@@ -96,8 +97,6 @@ namespace simple_viewer {
      */
     class ConeRenderer : public Renderer {
     protected:
-        unsigned long long _quad_count;
-
         void loadCone(float radius, float height);
 
     public:
@@ -107,6 +106,22 @@ namespace simple_viewer {
         void render() override;
 
         bool updateCone(float radius, float height);
+    };
+
+    /**
+     * @brief Sphere renderer
+     */
+    class SphereRenderer : public Renderer {
+    protected:
+        void loadSphere(float radius);
+
+    public:
+        explicit SphereRenderer(float radius, bool dynamic = false);
+
+        int type() const override { return RenderType::R_SPHERE; }
+        void render() override;
+
+        bool updateSphere(float radius);
     };
 
     /**

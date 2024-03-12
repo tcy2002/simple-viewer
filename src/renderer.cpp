@@ -115,9 +115,9 @@ namespace simple_viewer {
             _vertices[i++] = (float)(v.x * size.x);
             _vertices[i++] = (float)(v.y * size.y);
             _vertices[i++] = (float)(v.z * size.z);
-            _vertices[i++] = (float)(n.x * size.x);
-            _vertices[i++] = (float)(n.y * size.y);
-            _vertices[i++] = (float)(n.z * size.z);
+            _vertices[i++] = (float)(n.x);
+            _vertices[i++] = (float)(n.y);
+            _vertices[i++] = (float)(n.z);
         }
 
         // load face data, and transform into triangles
@@ -170,9 +170,9 @@ namespace simple_viewer {
             _vertices[i++] = (float)(v.x * radius);
             _vertices[i++] = (float)(v.y * height);
             _vertices[i++] = (float)(v.z * radius);
-            _vertices[i++] = (float)(n.x * radius);
-            _vertices[i++] = (float)(n.y * height);
-            _vertices[i++] = (float)(n.z * radius);
+            _vertices[i++] = (float)(n.x);
+            _vertices[i++] = (float)(n.y);
+            _vertices[i++] = (float)(n.z);
         }
 
         // load face data, and transform into triangles
@@ -215,6 +215,9 @@ namespace simple_viewer {
 
     void ConeRenderer::loadCone(float radius, float height) {
         // load vertex data
+        float r = std::sqrt(radius * radius + height * height);
+        float sin_a_r = radius / r / 0.4472136f;
+        float cos_a_r = height / r / 0.8944272f;
         radius *= 2;
         _vertex_count = _cone_mesh.vertices.size();
         _vertices = new float[_vertex_count * 6];
@@ -225,9 +228,9 @@ namespace simple_viewer {
             _vertices[i++] = (float)(v.x * radius);
             _vertices[i++] = (float)(v.y * height);
             _vertices[i++] = (float)(v.z * radius);
-            _vertices[i++] = (float)(n.x * radius);
-            _vertices[i++] = (float)(n.y * height);
-            _vertices[i++] = (float)(n.z * radius);
+            _vertices[i++] = (float)(n.x * cos_a_r);
+            _vertices[i++] = (float)(n.y * sin_a_r);
+            _vertices[i++] = (float)(n.z * cos_a_r);
         }
 
         // load face data, and transform into triangles
@@ -248,7 +251,7 @@ namespace simple_viewer {
     }
 
     ConeRenderer::ConeRenderer(float radius, float height, bool dynamic):
-            Renderer(), _quad_count(0) {
+            Renderer() {
         loadCone(radius, height);
         _dynamic = dynamic;
         _color = { 0.3, 0.25, 0.8 };
@@ -265,6 +268,62 @@ namespace simple_viewer {
     bool ConeRenderer::updateCone(float radius, float height) {
         if (!_dynamic) return false;
         loadCone(radius, height);
+        _inited = false;
+        return true;
+    }
+
+    void SphereRenderer::loadSphere(float radius) {
+        // load vertex data
+        radius *= 2;
+        _vertex_count = _sphere_mesh.vertices.size();
+        _vertices = new float[_vertex_count * 6];
+        int i = 0;
+        for (unsigned int j = 0; j < _vertex_count; j++) {
+            auto& v = _sphere_mesh.vertices[j].position;
+            auto& n = _sphere_mesh.vertices[j].normal;
+            _vertices[i++] = (float)(v.x * radius);
+            _vertices[i++] = (float)(v.y * radius);
+            _vertices[i++] = (float)(v.z * radius);
+            _vertices[i++] = (float)(n.x);
+            _vertices[i++] = (float)(n.y);
+            _vertices[i++] = (float)(n.z);
+        }
+
+        // load face data, and transform into triangles
+        _triangle_count = 0;
+        for (auto& f : _sphere_mesh.faces) {
+            _triangle_count += f.indices.size() - 2;
+        }
+        _indices = new unsigned int[_triangle_count * 3];
+        unsigned long long n; i = 0;
+        for (auto& f : _sphere_mesh.faces) {
+            n = f.indices.size();
+            for (unsigned int j = 1; j < n - 1; j++) {
+                _indices[i++] = f.indices[0];
+                _indices[i++] = f.indices[j];
+                _indices[i++] = f.indices[j + 1];
+            }
+        }
+    }
+
+    SphereRenderer::SphereRenderer(float radius, bool dynamic):
+            Renderer() {
+        loadSphere(radius);
+        _dynamic = dynamic;
+        _color = { 0.3, 0.25, 0.8 };
+    }
+
+    void SphereRenderer::render() {
+        if (!_inited) return;
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
+                       GL_UNSIGNED_INT, (void*)0); // NOLINT
+        glBindVertexArray(0);
+    }
+
+    bool SphereRenderer::updateSphere(float radius) {
+        if (!_dynamic) return false;
+        loadSphere(radius);
         _inited = false;
         return true;
     }

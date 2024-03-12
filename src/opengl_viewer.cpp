@@ -99,6 +99,12 @@ namespace simple_viewer {
         SV_RENDER_OBJ(line);
     }
 
+    static void drawSphere(SphereRenderer* sphere) {
+        shader->setFloat("gAmbientIntensity", 0.5f);
+        shader->setFloat("gDiffuseIntensity", 0.8f);
+        SV_RENDER_OBJ(sphere);
+    }
+
     static void drawObjects() {
         std::unique_lock<std::mutex> lock(mtx);
         for (int i = (int)objs.size() - 1; i >= 0; i--) {
@@ -125,6 +131,8 @@ namespace simple_viewer {
                 drawCone(dynamic_cast<ConeRenderer*>(objs[i].second));
             } else if (objs[i].second->type() == RenderType::R_LINE) {
                 drawLine(dynamic_cast<LineRenderer*>(objs[i].second));
+            } else if (objs[i].second->type() == RenderType::R_SPHERE) {
+                drawSphere(dynamic_cast<SphereRenderer*>(objs[i].second));
             }
         }
     }
@@ -310,11 +318,15 @@ namespace simple_viewer {
                 break;
             case ObjType::OBJ_CYLINDER:
                 objs.emplace_back(++max_id, new CylinderRenderer((float)param.size.x,
-                    (float)param.size.y, param.dynamic));
+                                                                 (float)param.size.y, param.dynamic));
                 break;
             case ObjType::OBJ_CONE:
                 objs.emplace_back(++max_id, new ConeRenderer((float)param.size.x,
-                    (float)param.size.y, param.dynamic));
+                                                             (float)param.size.y, param.dynamic));
+                break;
+            case ObjType::OBJ_SPHERE:
+                objs.emplace_back(++max_id, new SphereRenderer((float)param.size.x,
+                                                               param.dynamic));
                 break;
             case ObjType::OBJ_LINE:
                 objs.emplace_back(++max_id, new LineRenderer(param.line, param.dynamic));
@@ -350,10 +362,12 @@ namespace simple_viewer {
             case OBJ_UPDATE_CONE:
                 return dynamic_cast<ConeRenderer*>(objs[obj_idx].second)
                     ->updateCone((float)param.vec.x, (float)param.vec.y);
+            case OBJ_UPDATE_SPHERE:
+                return dynamic_cast<SphereRenderer*>(objs[obj_idx].second)->updateSphere((float)param.vec.x);
             case OBJ_UPDATE_LINE:
                 return dynamic_cast<LineRenderer*>(objs[obj_idx].second)->updateLine(param.line);
             case OBJ_UPDATE_LINE_WIDTH:
-                dynamic_cast<LineRenderer*>(objs[obj_idx].second)->setWidth(param.line_width);
+                dynamic_cast<LineRenderer*>(objs[obj_idx].second)->setWidth(param.vec[0]);
                 return true;
             case OBJ_DEL:
                 objs[obj_idx].first = -1;

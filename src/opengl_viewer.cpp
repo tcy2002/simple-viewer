@@ -36,7 +36,9 @@ namespace simple_viewer {
     //// axis
     static LineRenderer* axis_line = nullptr;
     static ConeRenderer* axis_arrow = nullptr;
-    static common::Vector3<float> axis_color[3] = { {0.93, 0.11, 0.14}, {0.13, 0.69, 0.3}, {0, 0.64, 0.91} }; // NOLINT
+    static common::Vector3<float> axis_color[3] = { // NOLINT
+            {0.93f, 0.11f, 0.14f}, {0.13f, 0.69f, 0.3f}, {0.f, 0.64f, 0.91f}
+    };
     static std::atomic<bool> show_axis(true);
 
     //// state
@@ -159,7 +161,8 @@ namespace simple_viewer {
             auto width = glutGet(GLUT_WINDOW_WIDTH);
             auto height = glutGet(GLUT_WINDOW_HEIGHT);
             float aspect = (float)width / (float)height;
-            shader->setVec3("gScreenOffset", common::Vector3<float>(-1.0f + 0.2f / aspect, -0.8, 0));
+            shader->setVec3("gScreenOffset",
+                            common::Vector3<float>(-1.0f + 0.2f / aspect, -0.8f, 0.f));
             auto cam_inv_basis = camera_transform.getBasis().transposed();
             glClear(GL_DEPTH_BUFFER_BIT);
             drawAxis(0, cam_inv_basis);
@@ -253,12 +256,12 @@ namespace simple_viewer {
         shader->setVec3("gLightDirection", common::Vector3<float>(1, -2, -3).normalized());
 
         // init axes
-        if (!axis_line) axis_line = new LineRenderer({ 0, 0, 0, 0, 0.5, 0 });
-        if (!axis_arrow) axis_arrow = new ConeRenderer(0.06, 0.15);
+        if (!axis_line) axis_line = new LineRenderer({ 0.f, 0.f, 0.f, 0.f, 0.5f, 0.f });
+        if (!axis_arrow) axis_arrow = new ConeRenderer(0.06f, 0.15f);
 
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.6, 0.85, 0.918, 1.);
-        glClearDepth(1.);
+        glClearColor(0.6f, 0.85f, 0.918f, 1.f);
+        glClearDepth(1.f);
 
         glutMainLoop();
     }
@@ -285,7 +288,7 @@ namespace simple_viewer {
                 auto height = glutGet(GLUT_WINDOW_HEIGHT);
                 aspect = (float)width / (float)height;
             }
-            camera.load()->setProj(45., aspect, .1, 100000.);
+            camera.load()->setProj(45.f, aspect, .1f, 100000.f);
         }
         camera.load()->setPosition(position);
         camera.load()->setYaw(yaw);

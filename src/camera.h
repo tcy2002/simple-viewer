@@ -36,12 +36,12 @@ namespace simple_viewer {
         common::Transform<float> _transform;
         float _proj[4];
 
-        const float MoveSpeedMin = 0.05, MoveSpeedMax = 10., MoveSpeedStep = 1.5;
+        const float MoveSpeedMin = 0.05f, MoveSpeedMax = 10.f, MoveSpeedStep = 1.5f;
         float _move_speed = MoveSpeedMin;
-        const float RotateSpeed = 0.004;
+        const float RotateSpeed = 0.004f;
         float _rotate_speed = RotateSpeed;
-        const float WheelStep = 8.0;
-        const float KeyStep = 200.0;
+        const float WheelStep = 8.0f;
+        const float KeyStep = 200.0f;
 
         int _state_left = 1, _state_middle = 1, _state_right = 1;
         int _state_w = 1, _state_a = 1, _state_s = 1, _state_d = 1;

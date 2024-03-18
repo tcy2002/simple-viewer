@@ -1,15 +1,15 @@
 #include "camera.h"
 
-#define SV_PI 3.14159265359
+#define SV_PI 3.1415926f
 
 namespace simple_viewer {
 
     Camera::Camera(): // NOLINT
-            _yaw(0.), _pitch(0.),
+            _yaw(0.f), _pitch(0.f),
             _position(common::Vector3<float>::zeros()),
-            _fov(SV_PI / 2.),
+            _fov(SV_PI / 2.f),
             _transform(common::Transform<float>::identity()),
-            _proj{1., 1., -1.0002, -0.20002} {}
+            _proj{1.f, 1.f, -1.0002f, -0.20002f} {}
 
     void Camera::mouse(int button, int state, int, int) {
         std::unique_lock<std::mutex> lock(_mutex_trans);
@@ -47,9 +47,9 @@ namespace simple_viewer {
 
         if (_state_left == 0 && _state_right == 1) {
             _yaw -= dx * _rotate_speed;
-            if (_yaw > SV_PI) _yaw -= 2 * SV_PI;
-            else if (_yaw < -SV_PI) _yaw += 2 * SV_PI;
-            common::Vector3<float> front(std::sin(_yaw), 0., std::cos(_yaw));
+            if (_yaw > SV_PI) _yaw -= 2.f * SV_PI;
+            else if (_yaw < -SV_PI) _yaw += 2.f * SV_PI;
+            common::Vector3<float> front(std::sin(_yaw), 0.f, std::cos(_yaw));
             _position += front * (dy * _move_speed);
         } else if ((_state_left == 1 && _state_middle == 0) || (_state_left == 0 && _state_right == 0)) {
             auto right_yaw = (float)(_yaw + SV_PI / 2);
@@ -58,11 +58,11 @@ namespace simple_viewer {
             _position -= common::Vector3<float>::up() * (dy * _move_speed);
         } else if (_state_left == 1 && _state_middle == 1 && _state_right == 0) {
             _yaw -= dx * _rotate_speed;
-            if (_yaw > SV_PI) _yaw -= 2 * SV_PI;
-            else if (_yaw < -SV_PI) _yaw += 2 * SV_PI;
+            if (_yaw > SV_PI) _yaw -= 2.f * SV_PI;
+            else if (_yaw < -SV_PI) _yaw += 2.f * SV_PI;
             _pitch += dy * _rotate_speed;
-            if (_pitch > SV_PI / 2) _pitch = SV_PI / 2;
-            else if (_pitch < -SV_PI / 2) _pitch = -SV_PI / 2;
+            if (_pitch > SV_PI / 2.f) _pitch = SV_PI / 2.f;
+            else if (_pitch < -SV_PI / 2.f) _pitch = -SV_PI / 2.f;
         }
     }
 

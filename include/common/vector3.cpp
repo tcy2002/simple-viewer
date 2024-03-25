@@ -111,8 +111,13 @@ Vector3<Scalar> Vector3<Scalar>::lerp(const Vector3<Scalar>& v, Scalar t) const 
 }
 
 template <typename Scalar>
-Vector3<Scalar> Vector3<Scalar>::project(const Vector3<Scalar>& v) const {
+Vector3<Scalar> Vector3<Scalar>::projectToVec(const Vector3<Scalar>& v) const {
     return v * (dot(v) / v.dot(v));
+}
+
+template <typename Scalar>
+Vector3<Scalar> Vector3<Scalar>::projectToPlane(const Vector3<Scalar>& v) const {
+    return *this - projectToVec(v);
 }
 
 template <typename Scalar>
@@ -130,6 +135,11 @@ Vector3<Scalar> Vector3<Scalar>::rotate(const Vector3<Scalar>& axis, Scalar thet
 template <typename Scalar>
 Scalar Vector3<Scalar>::angle(const Vector3<Scalar>& other) const {
     return acos(dot(other) / (norm() * other.norm()));
+}
+
+template <typename Scalar>
+Vector3<Scalar> Vector3<Scalar>::getAbsolute() const {
+    return {std::abs(x), std::abs(y), std::abs(z)};
 }
 
 template <typename Scalar>

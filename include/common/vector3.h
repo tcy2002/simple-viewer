@@ -35,10 +35,12 @@ namespace common {
         COMMON_FORCE_INLINE Scalar dot(const Vector3& v) const;
         COMMON_FORCE_INLINE Vector3 cross(const Vector3& v) const;
         COMMON_FORCE_INLINE Vector3 lerp(const Vector3& v, Scalar t) const;
-        COMMON_FORCE_INLINE Vector3 project(const Vector3& v) const;
+        COMMON_FORCE_INLINE Vector3 projectToVec(const Vector3& v) const;
+        COMMON_FORCE_INLINE Vector3 projectToPlane(const Vector3& n) const;
         COMMON_FORCE_INLINE Vector3 reflect(const Vector3& n) const;
         COMMON_FORCE_INLINE Vector3 rotate(const Vector3& axis, Scalar angle) const;
         COMMON_FORCE_INLINE Scalar angle(const Vector3& other) const;
+        COMMON_FORCE_INLINE Vector3 getAbsolute() const;
 
         COMMON_FORCE_INLINE static const Vector3& zeros();
         COMMON_FORCE_INLINE static const Vector3& ones();

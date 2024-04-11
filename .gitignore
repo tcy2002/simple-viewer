@@ -13,7 +13,4 @@ cmake-build-*/
 *.pdb
 *.exp
 
-!opengl/bin/freeglut.dll
-!opengl/bin/glew32.dll
-!opengl/lib/freeglut.lib
-!opengl/lib/glew32.lib
+!opengl/lib/*

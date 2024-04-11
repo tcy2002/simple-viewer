@@ -114,7 +114,7 @@ namespace simple_viewer {
         _proj[3] = -2.0f * _far * _near / (_far - _near);
     }
 
-    const common::Transform<float>& Camera::getTransform(int64_t time) {
+    const common::Transform<float>& Camera::getTransform(long long time) {
         std::unique_lock<std::mutex> lock(_mutex_trans);
         if (_state_left == 0 || _state_right == 0 || _state_middle == 0) {
             float dt = _last_time != -1 ? (float)(time - _last_time) / 1000 : 0;

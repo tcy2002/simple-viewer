@@ -24,7 +24,7 @@ else()
     target_link_libraries(SimpleViewer PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/libglut.a
             ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/libGLEW.a
-            pthread GL X11)
+            pthread X11 Xrandr Xi Xxf86vm GL)
 endif()
 
 add_executable(SimpleViewerTest example.cpp)

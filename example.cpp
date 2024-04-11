@@ -4,6 +4,13 @@
 #include <fstream>
 #include <thread>
 
+#ifdef _Win32
+#define SLEEP(t) Sleep(t)
+#else
+#include <unistd.h>
+#define SLEEP(t) usleep((t) * 1000)
+#endif
+
 void output_obj_debug(const common::Mesh<float>& mesh, const std::string& path) {
 	std::ofstream ofs(path);
 	for (auto& vert : mesh.vertices) {
@@ -71,11 +78,12 @@ int main()
 	float angle = 0;
 	clock_t tick = -1;
 	while (simple_viewer::getKeyState('q') != 0) {
-		Sleep(16);
+		SLEEP(16);
 		if (tick == -1) { tick = clock(); continue; }
 		clock_t tick_now = clock();
 		double dt = (tick_now - tick) / 1000.0;
 		tick = tick_now;
+		std::cout << tick << std::endl;
 
 		trans.setRotation({ 1, 1, 0 }, angle);
 		trans.setTranslation({ 3, 0, 0 });

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <thread>
 
-#ifdef _Win32
+#ifdef _WIN32
 #define SLEEP(t) Sleep(t)
 #else
 #include <unistd.h>

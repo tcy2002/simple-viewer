@@ -206,6 +206,7 @@ namespace simple_viewer {
     }
 
     static void timer(int) {
+        if (!isOpen()) return;
         glutPostRedisplay();
         glutTimerFunc(frame_dt.load(), timer, 1);
     }
@@ -270,6 +271,10 @@ namespace simple_viewer {
         if (glutGetWindow() != 0) {
             glutLeaveMainLoop(); // leave is ok (will trigger close_())
         }
+    }
+
+    bool isOpen() {
+        return glutGetWindow() != 0;
     }
 
     void setTargetFrameRate(int fps) {

@@ -86,7 +86,7 @@ namespace simple_viewer {
         Renderer() {
         loadMesh(mesh);
         _dynamic = dynamic;
-        _color = {0.3, 0.25, 0.8};
+        _color = {0.3f, 0.25f, 0.8f};
     }
 
     void MeshRenderer::render() {
@@ -140,7 +140,7 @@ namespace simple_viewer {
     CubeRenderer::CubeRenderer(const common::Vector3<float> &size, bool dynamic) {
         loadCube(size);
         _dynamic = dynamic;
-        _color = {0.3, 0.25, 0.8};
+        _color = {0.3f, 0.25f, 0.8f};
     }
 
     void CubeRenderer::render() {
@@ -195,7 +195,7 @@ namespace simple_viewer {
     CylinderRenderer::CylinderRenderer(float radius, float height, bool dynamic) {
         loadCylinder(radius, height);
         _dynamic = dynamic;
-        _color = {0.3, 0.25, 0.8};
+        _color = {0.3f, 0.25f, 0.8f};
     }
 
     void CylinderRenderer::render() {
@@ -254,7 +254,7 @@ namespace simple_viewer {
             Renderer() {
         loadCone(radius, height);
         _dynamic = dynamic;
-        _color = { 0.3, 0.25, 0.8 };
+        _color = {0.3f, 0.25f, 0.8f};
     }
 
     void ConeRenderer::render() {
@@ -310,7 +310,7 @@ namespace simple_viewer {
             Renderer() {
         loadSphere(radius);
         _dynamic = dynamic;
-        _color = { 0.3, 0.25, 0.8 };
+        _color = {0.3f, 0.25f, 0.8f};
     }
 
     void SphereRenderer::render() {
@@ -356,7 +356,7 @@ namespace simple_viewer {
             Renderer(), _width(1) {
         loadLine(points);
         _dynamic = dynamic;
-        _color = {1, 0.95, 0};
+        _color = {1.0f, 0.95f, 0.0f};
     }
 
     void LineRenderer::render() {

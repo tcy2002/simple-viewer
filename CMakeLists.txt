@@ -16,6 +16,9 @@ file(GLOB_RECURSE VIEWER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_library(SimpleViewer STATIC ${VIEWER_SOURCES})
 
 if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    if(CMAKE_CFG_INTDIR MATCHES "Debug")
+        add_definitions(-DNDEBUG)
+    endif()
     target_link_libraries(SimpleViewer PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/freeglut.lib
             ${CMAKE_CURRENT_SOURCE_DIR}/opengl/lib/glew32.lib

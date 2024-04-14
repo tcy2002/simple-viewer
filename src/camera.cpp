@@ -26,13 +26,13 @@ namespace simple_viewer {
             return;
         }
 
-        if (button == 5 || button == 7 || button == 35) {
+        if ((_state_left == 0 || _state_middle == 0 || _state_right == 0) && button == 3) {
             _move_speed *= MoveSpeedStep;
             if (_move_speed > MoveSpeedMax) _move_speed = MoveSpeedMax;
-        } else if (button == 6 || button == 8 || button == 36) {
+        } else if ((_state_left == 0 || _state_middle == 0 || _state_right == 0) && button == 4) {
             _move_speed /= MoveSpeedStep;
             if (_move_speed < MoveSpeedMin) _move_speed = MoveSpeedMin;
-        } else {
+        } else if (button == 3 || button == 4) {
             auto forward = -_transform.getAxis(2);
             _position += forward * ((float)(button == 3 ? 1 : -1) * _move_speed * WheelStep);
         }

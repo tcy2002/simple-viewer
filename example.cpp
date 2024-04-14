@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <string>
 
 #ifdef _WIN32
 #define SLEEP(t) Sleep(t)
@@ -41,7 +42,7 @@ void input_obj_debug(common::Mesh<float>& mesh, const std::string& path) {
 			auto& face = mesh.faces.back().indices;
 			ifs >> type;
 			while (type != "v" && type != "f" && ifs.good()) {
-				face.push_back(atoi(type.c_str()) - 1);
+				face.push_back(std::stoi(type) - 1);
 				ifs >> type;
 			}
 		}
@@ -66,7 +67,7 @@ int main()
 	common::Transform<float> trans;
 	trans.setOrigin({-5000, -13000, -5000});
 	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id0, simple_viewer::OBJ_MESH, trans });
-	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, common::Vector3<float>{ 0.71, 0.90, 0.11 } });
+	simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_COLOR, id0, simple_viewer::OBJ_MESH, common::Vector3<float>{ 0.71f, 0.90f, 0.11f } });
 	int id1 = simple_viewer::addObj({ simple_viewer::OBJ_CUBE, false, 1, 1, 1 });
 	int id2 = simple_viewer::addObj({ simple_viewer::OBJ_CYLINDER, false, 0.5, 1 });
 	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 1, 1 });
@@ -77,13 +78,12 @@ int main()
 
 	float angle = 0;
 	clock_t tick = -1;
-	while (simple_viewer::getKeyState('q') != 0) {
+	while (simple_viewer::getKeyState('q') != 0 && simple_viewer::isOpen()) {
 		SLEEP(16);
 		if (tick == -1) { tick = clock(); continue; }
 		clock_t tick_now = clock();
 		double dt = (tick_now - tick) / 1000.0;
 		tick = tick_now;
-		std::cout << tick << std::endl;
 
 		trans.setRotation({ 1, 1, 0 }, angle);
 		trans.setTranslation({ 3, 0, 0 });

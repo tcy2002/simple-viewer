@@ -41,13 +41,29 @@ namespace simple_viewer {
     };
     static std::atomic<bool> show_axis(true);
 
+    //// line
+    static std::atomic<int> line_width(1);
+    static std::atomic<bool> show_line(false);
+
     //// state
     static std::vector<int> mouse_state(50, 1); // NOLINT
     static std::vector<int> key_state(128, 1); // NOLINT
 
-    #define SV_RENDER_OBJ(obj) \
+#define SV_RENDER_LINE(obj) \
     do { if (!(obj)->isInited()) (obj)->init(1, 2); \
-    (obj)->render(); } while (0)
+    glLineWidth(line_width); (obj)->render(true); } while (0)
+
+#define SV_RENDER_OBJ(obj) \
+    do { if (!(obj)->isInited()) (obj)->init(1, 2); \
+    (obj)->render(false); } while (0)
+
+#define SV_RENDER_OBJ_WITH_LINE(obj) \
+    do { if (show_line) { \
+        shader->setVec3("gColor", common::Vector3<float>(1, 1, 1)); \
+        shader->setFloat("gAmbientIntensity", 1.0f); \
+        shader->setFloat("gDiffuseIntensity", 0); \
+        SV_RENDER_LINE(obj); \
+    } } while (0)
 
     static void drawAxis(int axis, const common::Matrix3x3<float>& basis) {
         if (!axis_line) return;
@@ -75,24 +91,28 @@ namespace simple_viewer {
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity",  0.8f);
         SV_RENDER_OBJ(mesh);
+        SV_RENDER_OBJ_WITH_LINE(mesh);
     }
 
     static void drawCube(CubeRenderer* cube) {
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity", 0.8f);
         SV_RENDER_OBJ(cube);
+        SV_RENDER_OBJ_WITH_LINE(cube);
     }
 
     static void drawCylinder(CylinderRenderer* cyl) {
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity", 0.8f);
         SV_RENDER_OBJ(cyl);
+        SV_RENDER_OBJ_WITH_LINE(cyl);
     }
 
     static void drawCone(ConeRenderer* cone) {
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity", 0.8f);
         SV_RENDER_OBJ(cone);
+        SV_RENDER_OBJ_WITH_LINE(cone);
     }
 
     static void drawLine(LineRenderer* line) {
@@ -105,6 +125,7 @@ namespace simple_viewer {
         shader->setFloat("gAmbientIntensity", 0.5f);
         shader->setFloat("gDiffuseIntensity", 0.8f);
         SV_RENDER_OBJ(sphere);
+        SV_RENDER_OBJ_WITH_LINE(sphere);
     }
 
     static void drawObjects() {
@@ -398,8 +419,12 @@ namespace simple_viewer {
     }
 
     void showAxis(bool show) {
-        std::unique_lock<std::mutex> lock(mtx);
         show_axis.store(show);
+    }
+
+    void showLine(bool show, int width) {
+        show_line.store(show);
+        line_width.store(width);
     }
 
     int getMouseState(int button) {

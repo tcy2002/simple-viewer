@@ -44,7 +44,7 @@ namespace simple_viewer {
         virtual int type() const = 0;
         virtual void init(int VAP_position, int VAP_normal);
         virtual void deinit();
-        virtual void render() = 0;
+        virtual void render(bool line) = 0;
     };
 
     /**
@@ -58,7 +58,7 @@ namespace simple_viewer {
         explicit MeshRenderer(const common::Mesh<float>& mesh, bool dynamic = false);
 
         int type() const override { return RenderType::R_MESH; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateMesh(const common::Mesh<float>& mesh);
     };
@@ -74,7 +74,7 @@ namespace simple_viewer {
         explicit CubeRenderer(const common::Vector3<float>& size, bool dynamic = false);
 
         int type() const override { return RenderType::R_CUBE; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateCube(const common::Vector3<float>& size);
     };
@@ -87,7 +87,7 @@ namespace simple_viewer {
         explicit CylinderRenderer(float radius, float height, bool dynamic = false);
 
         int type() const override { return RenderType::R_CYLINDER; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateCylinder(float radius, float height);
     };
@@ -103,7 +103,7 @@ namespace simple_viewer {
         explicit ConeRenderer(float radius, float height, bool dynamic = false);
 
         int type() const override { return RenderType::R_CONE; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateCone(float radius, float height);
     };
@@ -119,7 +119,7 @@ namespace simple_viewer {
         explicit SphereRenderer(float radius, bool dynamic = false);
 
         int type() const override { return RenderType::R_SPHERE; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateSphere(float radius);
     };
@@ -137,7 +137,7 @@ namespace simple_viewer {
         explicit LineRenderer(const std::vector<float>& points, bool dynamic = false);
 
         int type() const override { return RenderType::R_LINE; }
-        void render() override;
+        void render(bool line) override;
 
         bool updateLine(const std::vector<float>& points);
     };

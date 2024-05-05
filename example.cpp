@@ -78,14 +78,23 @@ int main()
 
 	float angle = 0;
 	clock_t tick = -1;
-	while (simple_viewer::getKeyState('q') != 0 && simple_viewer::isOpen()) {
+    while (!simple_viewer::isOpen());
+	while (simple_viewer::getKeyState(27) != 0 && simple_viewer::isOpen()) {
 		SLEEP(16);
+
+        static bool show = false;
+        if (simple_viewer::getKeyState('v') == 2) {
+            std::cout << 1 << std::endl;
+            simple_viewer::showLine(!show, 2);
+            show = !show;
+        }
+
 		if (tick == -1) { tick = clock(); continue; }
 		clock_t tick_now = clock();
 		double dt = (tick_now - tick) / 1000.0;
 		tick = tick_now;
 
-		trans.setRotation({ 1, 1, 0 }, angle);
+//		trans.setRotation({ 1, 1, 0 }, angle);
 		trans.setTranslation({ 3, 0, 0 });
 		simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id1, simple_viewer::OBJ_CUBE, trans });
 		trans.setTranslation({ -3, 0, 0 });

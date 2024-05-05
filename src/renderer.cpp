@@ -89,9 +89,14 @@ namespace simple_viewer {
         _color = {0.3f, 0.25f, 0.8f};
     }
 
-    void MeshRenderer::render() {
+    void MeshRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
+        if (line) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
                        GL_UNSIGNED_INT, (void*)0); // NOLINT
         glBindVertexArray(0);
@@ -143,9 +148,14 @@ namespace simple_viewer {
         _color = {0.3f, 0.25f, 0.8f};
     }
 
-    void CubeRenderer::render() {
+    void CubeRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
+        if (line) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
                        GL_UNSIGNED_INT, (void*)0); // NOLINT
         glBindVertexArray(0);
@@ -198,11 +208,16 @@ namespace simple_viewer {
         _color = {0.3f, 0.25f, 0.8f};
     }
 
-    void CylinderRenderer::render() {
+    void CylinderRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
+        if (line) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
-                       GL_UNSIGNED_INT, (void *)0); // NOLINT
+                       GL_UNSIGNED_INT, (void*)0); // NOLINT
         glBindVertexArray(0);
     }
 
@@ -257,9 +272,14 @@ namespace simple_viewer {
         _color = {0.3f, 0.25f, 0.8f};
     }
 
-    void ConeRenderer::render() {
+    void ConeRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
+        if (line) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
                        GL_UNSIGNED_INT, (void*)0); // NOLINT
         glBindVertexArray(0);
@@ -313,9 +333,14 @@ namespace simple_viewer {
         _color = {0.3f, 0.25f, 0.8f};
     }
 
-    void SphereRenderer::render() {
+    void SphereRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
+        if (line) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glDrawElements(GL_TRIANGLES, (GLsizei)(_triangle_count * 3),
                        GL_UNSIGNED_INT, (void*)0); // NOLINT
         glBindVertexArray(0);
@@ -359,7 +384,7 @@ namespace simple_viewer {
         _color = {1.0f, 0.95f, 0.0f};
     }
 
-    void LineRenderer::render() {
+    void LineRenderer::render(bool line) {
         if (!_inited) return;
         glBindVertexArray(VAO);
         glLineWidth((float)_width);

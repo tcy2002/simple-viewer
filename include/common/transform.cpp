@@ -17,20 +17,21 @@ Transform<Scalar>& Transform<Scalar>::operator*=(const Transform<Scalar>& t) {
 
 template <typename Scalar>
 Vector3<Scalar> Transform<Scalar>::getAxis(int axis) const {
-    return {_basis[0][axis], _basis[1][axis], _basis[2][axis]};
+    return _basis.col(axis);
 }
 
 template <typename Scalar>
 void Transform<Scalar>::setRotation(const Vector3<Scalar>& axis, Scalar angle) {
-    _basis.setRotation(axis, angle);
+
+    _basis = Eigen::AngleAxis<Scalar>(angle, axis.normalized()).toRotationMatrix();
 }
 
 template <typename Scalar>
 void Transform<Scalar>::setEulerRotation(Scalar x, Scalar y, Scalar z, RotType type) {
-    Matrix3x3<Scalar> mat_y, mat_z;
-    _basis.setRotation(Vector3<Scalar>::right(), x);
-    mat_y.setRotation(Vector3<Scalar>::up(), y);
-    mat_z.setRotation(Vector3<Scalar>::forward(), z);
+    Matrix3<Scalar> mat_y, mat_z;
+    _basis = Eigen::AngleAxis<Scalar>(x, Vector3<Scalar>::UnitX()).toRotationMatrix();
+    mat_y = Eigen::AngleAxis<Scalar>(y, Vector3<Scalar>::UnitY()).toRotationMatrix();
+    mat_z = Eigen::AngleAxis<Scalar>(z, Vector3<Scalar>::UnitZ()).toRotationMatrix();
     switch (type) {
         case RotType::S_XYZ: case RotType::ZYX:
             _basis = mat_z * mat_y * _basis;
@@ -77,7 +78,7 @@ Vector3<Scalar> Transform<Scalar>::inverseTransform(const Vector3<Scalar>& v) co
 
 template <typename Scalar>
 const Transform<Scalar>& Transform<Scalar>::identity() {
-    static Transform<Scalar> identity;
+    static Transform identity;
     return identity;
 }
 

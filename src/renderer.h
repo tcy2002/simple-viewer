@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common/general.h"
-#include "common/vector3.h"
 #include "common/mesh.h"
 #include "common/transform.h"
 

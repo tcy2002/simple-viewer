@@ -57,12 +57,12 @@ namespace simple_viewer {
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = mesh.vertices[j].position;
             auto& n = mesh.vertices[j].normal;
-            _vertices[i++] = (float)v.x;
-            _vertices[i++] = (float)v.y;
-            _vertices[i++] = (float)v.z;
-            _vertices[i++] = (float)n.x;
-            _vertices[i++] = (float)n.y;
-            _vertices[i++] = (float)n.z;
+            _vertices[i++] = v.x();
+            _vertices[i++] = v.y();
+            _vertices[i++] = v.z();
+            _vertices[i++] = n.x();
+            _vertices[i++] = n.y();
+            _vertices[i++] = n.z();
         }
 
         // load face data, and transform into triangles
@@ -117,12 +117,12 @@ namespace simple_viewer {
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cube_mesh.vertices[j].position;
             auto& n = _cube_mesh.vertices[j].normal;
-            _vertices[i++] = (float)(v.x * size.x);
-            _vertices[i++] = (float)(v.y * size.y);
-            _vertices[i++] = (float)(v.z * size.z);
-            _vertices[i++] = (float)(n.x);
-            _vertices[i++] = (float)(n.y);
-            _vertices[i++] = (float)(n.z);
+            _vertices[i++] = (v.x() * size.x());
+            _vertices[i++] = (v.y() * size.y());
+            _vertices[i++] = (v.z() * size.z());
+            _vertices[i++] = (n.x());
+            _vertices[i++] = (n.y());
+            _vertices[i++] = (n.z());
         }
 
         // load face data, and transform into triangles
@@ -177,12 +177,12 @@ namespace simple_viewer {
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cylinder_mesh.vertices[j].position;
             auto& n = _cylinder_mesh.vertices[j].normal;
-            _vertices[i++] = (float)(v.x * radius);
-            _vertices[i++] = (float)(v.y * height);
-            _vertices[i++] = (float)(v.z * radius);
-            _vertices[i++] = (float)(n.x);
-            _vertices[i++] = (float)(n.y);
-            _vertices[i++] = (float)(n.z);
+            _vertices[i++] = (v.x() * radius);
+            _vertices[i++] = (v.y() * height);
+            _vertices[i++] = (v.z() * radius);
+            _vertices[i++] = (n.x());
+            _vertices[i++] = (n.y());
+            _vertices[i++] = (n.z());
         }
 
         // load face data, and transform into triangles
@@ -240,12 +240,12 @@ namespace simple_viewer {
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _cone_mesh.vertices[j].position;
             auto& n = _cone_mesh.vertices[j].normal;
-            _vertices[i++] = (float)(v.x * radius);
-            _vertices[i++] = (float)(v.y * height);
-            _vertices[i++] = (float)(v.z * radius);
-            _vertices[i++] = (float)(n.x * cos_a_r);
-            _vertices[i++] = (float)(n.y * sin_a_r);
-            _vertices[i++] = (float)(n.z * cos_a_r);
+            _vertices[i++] = (v.x() * radius);
+            _vertices[i++] = (v.y() * height);
+            _vertices[i++] = (v.z() * radius);
+            _vertices[i++] = (n.x() * cos_a_r);
+            _vertices[i++] = (n.y() * sin_a_r);
+            _vertices[i++] = (n.z() * cos_a_r);
         }
 
         // load face data, and transform into triangles
@@ -301,12 +301,12 @@ namespace simple_viewer {
         for (unsigned int j = 0; j < _vertex_count; j++) {
             auto& v = _sphere_mesh.vertices[j].position;
             auto& n = _sphere_mesh.vertices[j].normal;
-            _vertices[i++] = (float)(v.x * radius);
-            _vertices[i++] = (float)(v.y * radius);
-            _vertices[i++] = (float)(v.z * radius);
-            _vertices[i++] = (float)(n.x);
-            _vertices[i++] = (float)(n.y);
-            _vertices[i++] = (float)(n.z);
+            _vertices[i++] = (v.x() * radius);
+            _vertices[i++] = (v.y() * radius);
+            _vertices[i++] = (v.z() * radius);
+            _vertices[i++] = (n.x());
+            _vertices[i++] = (n.y());
+            _vertices[i++] = (n.z());
         }
 
         // load face data, and transform into triangles

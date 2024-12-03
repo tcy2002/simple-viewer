@@ -23,7 +23,7 @@ void Mesh<Scalar>::perVertexNormal(Mesh<Scalar>& mesh) {
         }
     }
     for (int i = 0; i < v_n; i++) {
-        Vector3<Scalar> normal = Vector3<Scalar>::zeros();
+        Vector3<Scalar> normal = Vector3<Scalar>::Zero();
         for (auto j : _map[i]) {
             normal += mesh.faces[j].normal;
         }

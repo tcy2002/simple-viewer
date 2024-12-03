@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector3.h"
+#include "general.h"
 #include <vector>
 
 namespace common {
@@ -21,13 +21,15 @@ namespace common {
         std::vector<Face> faces;
 
         Mesh() {}
-        Mesh(std::vector<Vertex> vs, std::vector<Face> fs):
+        Mesh(const std::vector<Vertex>& vs, const std::vector<Face>& fs):
+            vertices(vs), faces(fs) {}
+        Mesh(std::vector<Vertex>&& vs, std::vector<Face>&& fs):
             vertices(std::move(vs)), faces(std::move(fs)) {}
 
         bool empty() const { return vertices.empty() || faces.empty(); }
 
-        static void perFaceNormal(Mesh<Scalar>& mesh);
-        static void perVertexNormal(Mesh<Scalar>& mesh);
+        static void perFaceNormal(Mesh& mesh);
+        static void perVertexNormal(Mesh& mesh);
     };
 
     #include "mesh.cpp"

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "common/vector3.h"
-#include "common/matrix3x3.h"
+#include "common/general.h"
 
 namespace simple_viewer {
 
@@ -23,7 +22,7 @@ namespace simple_viewer {
         void setInt(const char* name, int value) const;
         void setFloat(const char* name, float value) const;
         void setVec3(const char* name, const common::Vector3<float>& value) const;
-        void setMat3(const char* name, const common::Matrix3x3<float>& value) const;
+        void setMat3(const char* name, const common::Matrix3<float>& value) const;
     };
 
 } // namespace simple_viewer

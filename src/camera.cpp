@@ -6,7 +6,7 @@ namespace simple_viewer {
 
     Camera::Camera(): // NOLINT
             _yaw(0.f), _pitch(0.f),
-            _position(common::Vector3<float>::zeros()),
+            _position(common::Vector3<float>::Zero()),
             _fov(SV_PI / 2.f),
             _transform(common::Transform<float>::identity()),
             _proj{1.f, 1.f, -1.0002f, -0.20002f} {}
@@ -55,7 +55,7 @@ namespace simple_viewer {
             auto right_yaw = (float)(_yaw + SV_PI / 2);
             common::Vector3<float> right(std::sin(right_yaw), 0., std::cos(right_yaw));
             _position += right * (dx * _move_speed);
-            _position -= common::Vector3<float>::up() * (dy * _move_speed);
+            _position -= common::Vector3<float>::UnitY() * (dy * _move_speed);
         } else if (_state_left == 1 && _state_middle == 1 && _state_right == 0) {
             _yaw -= dx * _rotate_speed;
             if (_yaw > SV_PI) _yaw -= 2.f * SV_PI;

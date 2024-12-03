@@ -10,8 +10,6 @@
 #include "shader_program.h"
 #include "shader_vert.h"
 #include "shader_frag.h"
-#include "common/vector3.h"
-#include "common/matrix3x3.h"
 #include "common/transform.h"
 
 namespace simple_viewer {
@@ -65,14 +63,15 @@ namespace simple_viewer {
         SV_RENDER_LINE(obj); \
     } } while (0)
 
-    static void drawAxis(int axis, const common::Matrix3x3<float>& basis) {
+    static void drawAxis(int axis, const common::Matrix3<float>& basis) {
         if (!axis_line) return;
         shader->setVec3("gColor", axis_color[axis]);
 
         // show the axis strip
         axis_line->setWidth(2);
-        common::Matrix3x3<float> rot(axis != 0, axis == 0, 0, -(float)(axis == 0),
-            axis == 1, -(float)(axis == 2), 0, axis == 2, axis != 2);
+        common::Matrix3<float> rot;
+        rot << (axis != 0), (axis == 0), 0, -(float)(axis == 0),
+            (axis == 1), -(float)(axis == 2), 0, (axis == 2), (axis != 2);
         shader->setMat3("gWorldBasis", basis * rot);
         shader->setVec3("gWorldOrigin", common::Vector3<float>(0, 0, -8));
         shader->setFloat("gAmbientIntensity", 1.0f);
@@ -172,19 +171,19 @@ namespace simple_viewer {
         shader->setFloat("gProj[1]", (float)camera.load()->getProj(1));
         shader->setFloat("gProj[2]", (float)camera.load()->getProj(2));
         shader->setFloat("gProj[3]", (float)camera.load()->getProj(3));
-        shader->setVec3("gScreenOffset", common::Vector3<float>::zeros());
+        shader->setVec3("gScreenOffset", common::Vector3<float>::Zero());
         drawObjects();
 
         // render axes
         if (show_axis.load()) {
-            shader->setMat3("gCameraBasis", common::Matrix3x3<float>::identity());
-            shader->setVec3("gCameraOrigin", common::Vector3<float>::zeros());
+            shader->setMat3("gCameraBasis", common::Matrix3<float>::Identity());
+            shader->setVec3("gCameraOrigin", common::Vector3<float>::Zero());
             auto width = glutGet(GLUT_WINDOW_WIDTH);
             auto height = glutGet(GLUT_WINDOW_HEIGHT);
             float aspect = (float)width / (float)height;
             shader->setVec3("gScreenOffset",
                             common::Vector3<float>(-1.0f + 0.2f / aspect, -0.8f, 0.f));
-            auto cam_inv_basis = camera_transform.getBasis().transposed();
+            auto cam_inv_basis = camera_transform.getBasis().transpose();
             glClear(GL_DEPTH_BUFFER_BIT);
             drawAxis(0, cam_inv_basis);
             drawAxis(1, cam_inv_basis);
@@ -346,16 +345,13 @@ namespace simple_viewer {
                 objs.emplace_back(++max_id, new CubeRenderer(param.size, param.dynamic));
                 break;
             case ObjType::OBJ_CYLINDER:
-                objs.emplace_back(++max_id, new CylinderRenderer((float)param.size.x,
-                                                                 (float)param.size.y, param.dynamic));
+                objs.emplace_back(++max_id, new CylinderRenderer(param.size.x(), param.size.y(), param.dynamic));
                 break;
             case ObjType::OBJ_CONE:
-                objs.emplace_back(++max_id, new ConeRenderer((float)param.size.x,
-                                                             (float)param.size.y, param.dynamic));
+                objs.emplace_back(++max_id, new ConeRenderer(param.size.x(), param.size.y(), param.dynamic));
                 break;
             case ObjType::OBJ_SPHERE:
-                objs.emplace_back(++max_id, new SphereRenderer((float)param.size.x,
-                                                               param.dynamic));
+                objs.emplace_back(++max_id, new SphereRenderer(param.size.x(), param.dynamic));
                 break;
             case ObjType::OBJ_LINE:
                 objs.emplace_back(++max_id, new LineRenderer(param.line, param.dynamic));
@@ -387,12 +383,12 @@ namespace simple_viewer {
                 return dynamic_cast<CubeRenderer*>(objs[obj_idx].second)->updateCube(param.vec);
             case OBJ_UPDATE_CYLINDER:
                 return dynamic_cast<CylinderRenderer*>(objs[obj_idx].second)
-                    ->updateCylinder((float)param.vec.x, (float)param.vec.y);
+                    ->updateCylinder(param.vec.x(), param.vec.y());
             case OBJ_UPDATE_CONE:
                 return dynamic_cast<ConeRenderer*>(objs[obj_idx].second)
-                    ->updateCone((float)param.vec.x, (float)param.vec.y);
+                    ->updateCone(param.vec.x(), param.vec.y());
             case OBJ_UPDATE_SPHERE:
-                return dynamic_cast<SphereRenderer*>(objs[obj_idx].second)->updateSphere((float)param.vec.x);
+                return dynamic_cast<SphereRenderer*>(objs[obj_idx].second)->updateSphere(param.vec.x());
             case OBJ_UPDATE_LINE:
                 return dynamic_cast<LineRenderer*>(objs[obj_idx].second)->updateLine(param.line);
             case OBJ_UPDATE_LINE_WIDTH:

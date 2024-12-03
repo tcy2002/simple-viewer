@@ -1,6 +1,8 @@
 #include "shader_program.h"
 
-#include "GL/glew.h"
+#include <GL/glew.h>
+#include <iostream>
+#include "common/general.h"
 
 namespace simple_viewer {
 
@@ -70,14 +72,14 @@ namespace simple_viewer {
     }
 
     void ShaderProgram::setVec3(const char* name, const common::Vector3<float>& value) const {
-        glUniform3f(glGetUniformLocation(_program_id, name), (float)value.x, (float)value.y, (float)value.z);
+        glUniform3f(glGetUniformLocation(_program_id, name), value.x(), value.y(), value.z());
     }
 
-    void ShaderProgram::setMat3(const char* name, const common::Matrix3x3<float>& value) const {
+    void ShaderProgram::setMat3(const char* name, const common::Matrix3<float>& value) const {
         static float buf[9];
-        buf[0] = (float)value[0][0]; buf[1] = (float)value[1][0]; buf[2] = (float)value[2][0];
-        buf[3] = (float)value[0][1]; buf[4] = (float)value[1][1]; buf[5] = (float)value[2][1];
-        buf[6] = (float)value[0][2]; buf[7] = (float)value[1][2]; buf[8] = (float)value[2][2];
+        buf[0] = value(0, 0); buf[1] = value(1, 0); buf[2] = value(2, 0);
+        buf[3] = value(0, 1); buf[4] = value(1, 1); buf[5] = value(2, 1);
+        buf[6] = value(0, 2); buf[7] = value(1, 2); buf[8] = value(2, 2);
         glUniformMatrix3fv(glGetUniformLocation(_program_id, name), 1, GL_FALSE, buf);
     }
 

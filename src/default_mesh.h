@@ -4,7 +4,7 @@
 
 namespace simple_viewer {
 
-    const common::Mesh<float> _cube_mesh = { //NOLINT
+    const common::Mesh<float> _cube_mesh = {
             {
                     {{-0.5, 0.5, -0.5}, {0, 1, 0}},
                     {{-0.5, 0.5, 0.5}, {0, 1,  0}},
@@ -40,8 +40,8 @@ namespace simple_viewer {
                     {{20, 21, 22, 23}, {1, 0, 0}}
             }
     };
-
-    const common::Mesh<float> _cylinder_mesh = { //NOLINT
+    
+    const common::Mesh<float> _cylinder_mesh = {
             {
                     {{0.5, 0.5, 0}, {0, 1, 0}},
                     {{0.475528, 0.5, -0.154508}, {0, 1, 0}},
@@ -169,7 +169,7 @@ namespace simple_viewer {
                     {{59, 78, 79}, {0.951038, -0.006156, 0.309011}},
             },
     };
-
+    
     const common::Mesh<float> _cone_mesh = { // NOLINT
             {
                     {{0.5, -0.5, 0}, {0, -1, 0}},
@@ -377,7 +377,7 @@ namespace simple_viewer {
                     {{99, 79, 60}, {}}
             }
     };
-
+    
     const common::Mesh<float> _sphere_mesh = { // NOLINT
             {
                     {{0.287827, -0.287827, -0.287827}, {0.57735, -0.57735, -0.57735}},

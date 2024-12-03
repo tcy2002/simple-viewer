@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mutex>
-#include "common/vector3.h"
 #include "common/transform.h"
 
 namespace simple_viewer {

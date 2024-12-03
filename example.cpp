@@ -5,17 +5,10 @@
 #include <thread>
 #include <string>
 
-#ifdef _WIN32
-#define SLEEP(t) Sleep(t)
-#else
-#include <unistd.h>
-#define SLEEP(t) usleep((t) * 1000)
-#endif
-
 void output_obj_debug(const common::Mesh<float>& mesh, const std::string& path) {
 	std::ofstream ofs(path);
 	for (auto& vert : mesh.vertices) {
-		ofs << "v " << vert.position.x << " " << vert.position.y << " " << vert.position.z << "\n";
+		ofs << "v " << vert.position.x() << " " << vert.position.y() << " " << vert.position.z() << "\n";
 	}
 	for (auto& face : mesh.faces) {
 		ofs << "f ";
@@ -73,14 +66,14 @@ int main()
 	int id3 = simple_viewer::addObj({ simple_viewer::OBJ_CONE, false, 1, 1 });
     int id4 = simple_viewer::addObj({simple_viewer::OBJ_SPHERE, false, 0.5});
     simple_viewer::updateObj({simple_viewer::OBJ_UPDATE_TRANSFORM, id4, simple_viewer::OBJ_SPHERE,
-                              common::Transform<float>(common::Matrix3x3<float>::identity(),
+                              common::Transform<float>(common::Matrix3<float>::Identity(),
                                                        common::Vector3<float>(0, -2, 0))});
 
 	float angle = 0;
 	clock_t tick = -1;
     while (!simple_viewer::isOpen());
 	while (simple_viewer::getKeyState(27) != 0 && simple_viewer::isOpen()) {
-		SLEEP(16);
+		COMMON_USleep(16000);
 
         static bool show = false;
         if (simple_viewer::getKeyState('v') == 2) {
@@ -94,7 +87,7 @@ int main()
 		double dt = (tick_now - tick) / 1000.0;
 		tick = tick_now;
 
-//		trans.setRotation({ 1, 1, 0 }, angle);
+		trans.setRotation({ 1, 1, 0 }, angle);
 		trans.setTranslation({ 3, 0, 0 });
 		simple_viewer::updateObj({ simple_viewer::OBJ_UPDATE_TRANSFORM, id1, simple_viewer::OBJ_CUBE, trans });
 		trans.setTranslation({ -3, 0, 0 });
